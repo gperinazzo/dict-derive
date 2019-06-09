@@ -17,8 +17,7 @@ fn is_option(ty: &syn::Type) -> bool {
     path.segments
         .iter()
         .map(|segment| segment.ident.to_string())
-        .find(|x| x.as_str() == "Option")
-        .is_some()
+        .any(|x| x.as_str() == "Option")
 }
 
 fn map_extraction(field: &Field) -> TokenStream2 {
@@ -32,9 +31,10 @@ fn map_extraction(field: &Field) -> TokenStream2 {
 
     let name = ident.to_string();
 
-    let function = match is_option(&field.ty) {
-        true => Ident::new("extract_optional", field.ty.span()),
-        false => Ident::new("extract_required", field.ty.span()),
+    let function = if is_option(&field.ty) {
+        Ident::new("extract_optional", field.ty.span())
+    } else {
+        Ident::new("extract_required", field.ty.span())
     };
 
     quote_spanned! {ident.span()=>
