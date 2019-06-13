@@ -1,5 +1,10 @@
 [package]
 name = "dict_derive"
+description = "Derive macros for some PyO3 traits to convert python dicts into rust structs"
+repository = "https://github.com/gperinazzo/dict-derive"
+readme = "README.md"
+keywords = ["pyo3", "derive", "dict"]
+license = "Apache-2.0"
 version = "0.1.0"
 authors = ["Guilherme Perinazzo <gperinazzo@gmail.com>"]
 edition = "2018"

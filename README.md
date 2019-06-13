@@ -8,7 +8,7 @@ Add the library to your `Cargo.toml` together with PyO3:
 ```
 [dependencies]
 pyo3 = "0.7.0"
-dict_derive = { git = "https://github.com/gperinazzo/dict-derive" }
+dict_derive = "0.1.0"
 ```
 
 Import the derive implementation and use it on your structs:
