@@ -1,11 +1,11 @@
 error[E0277]: the trait bound `Test: pyo3::conversion::FromPyObject<'_>` is not satisfied
- --> $DIR/03-unsupported.rs:9:11
+ --> $DIR/unsupported_from.rs:9:11
   |
 9 |     test: Test,
   |           ^^^^ the trait `pyo3::conversion::FromPyObject<'_>` is not implemented for `Test`
   |
 note: required by `<Derived as pyo3::conversion::FromPyObject<'source>>::extract::extract_required`
- --> $DIR/03-unsupported.rs:7:10
+ --> $DIR/unsupported_from.rs:7:10
   |
 7 | #[derive(FromPyObject)]
   |          ^^^^^^^^^^^^

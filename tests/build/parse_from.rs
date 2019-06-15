@@ -19,6 +19,7 @@ pub struct OptionalUser {
     age: std::option::Option<u16>,
 }
 
+#[derive(FromPyObject)]
 pub struct Nested {
     users: Vec<User>,
     optional_user: Option<OptionalUser>,
