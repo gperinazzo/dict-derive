@@ -1,0 +1,9 @@
+error[E0277]: the trait bound `Test: pyo3::conversion::IntoPyObject` is not satisfied
+ --> $DIR/unsupported_into.rs:9:11
+  |
+9 |     test: Test,
+  |           ^^^^ the trait `pyo3::conversion::IntoPyObject` is not implemented for `Test`
+  |
+  = note: required by `pyo3::conversion::IntoPyObject::into_object`
+
+For more information about this error, try `rustc --explain E0277`.

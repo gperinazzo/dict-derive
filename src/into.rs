@@ -16,7 +16,7 @@ fn map_fields(field: &Field) -> TokenStream2 {
     let name = ident.to_string();
 
     // TODO: find a way to do this without the .expect
-    quote_spanned! {ident.span()=>
+    quote_spanned! {field.ty.span()=>
         dict.set_item(#name, IntoPyObject::into_object(self.#ident, py)).expect("Failed to set_item on dict");
     }
 }

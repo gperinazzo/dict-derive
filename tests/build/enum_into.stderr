@@ -1,0 +1,5 @@
+error: Deriving enums is not supported
+ --> $DIR/enum_into.rs:4:5
+  |
+4 | pub enum Nothing {
+  |     ^^^^
