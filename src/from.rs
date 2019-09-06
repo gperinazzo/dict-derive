@@ -16,7 +16,7 @@ fn is_option(ty: &syn::Type) -> bool {
         .any(|x| x.as_str() == "Option")
 }
 
-fn map_extraction(field: &Field) -> TokenStream2 {
+fn map_extraction(field: Field) -> TokenStream2 {
     let ident = match &field.ident {
         Some(i) => i,
         None => {

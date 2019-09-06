@@ -1,10 +1,10 @@
+use proc_macro2::TokenStream;
 use quote::{quote, quote_spanned};
-use syn::export::TokenStream2;
 use syn::spanned::Spanned;
 
 use syn::{Data, DeriveInput, Field};
 
-fn map_fields(field: &Field) -> TokenStream2 {
+fn map_fields(field: Field) -> TokenStream {
     let ident = match &field.ident {
         Some(i) => i,
         None => {
@@ -21,7 +21,7 @@ fn map_fields(field: &Field) -> TokenStream2 {
     }
 }
 
-pub fn into_impl(ast: DeriveInput) -> TokenStream2 {
+pub fn into_impl(ast: DeriveInput) -> TokenStream {
     let struct_data = match ast.data {
         Data::Struct(s) => s,
         Data::Enum(e) => {

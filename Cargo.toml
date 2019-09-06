@@ -13,11 +13,10 @@ edition = "2018"
 proc-macro = true
 
 [dependencies]
-syn = "0.15"
-quote = "0.6"
+syn = "1.0"
+quote = "1.0"
+proc-macro2 = "1.0"
 
 [dev-dependencies]
 trybuild = "1.0"
 pyo3 = "0.7.0"
-
-
