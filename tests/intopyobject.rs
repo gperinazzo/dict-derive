@@ -21,7 +21,7 @@ fn test_conversion() -> PyResult<()> {
             email: "tester@tests.com".to_owned(),
             age: 27,
         };
-        let obj = user.into_object(py);
+        let obj: PyObject = user.into_py(py);
         let dict: &PyDict = obj.cast_as(py)?;
 
         assert!(dict.get_item("name").is_some());
@@ -44,7 +44,7 @@ fn test_conversion() -> PyResult<()> {
             email: "tester@tests.com".to_owned(),
             age: 27,
         };
-        let obj = user.into_object(py);
+        let obj: PyObject = user.into_py(py);
         let dict: &PyDict = obj.cast_as(py)?;
 
         assert!(dict.get_item("name").is_some());

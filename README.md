@@ -1,14 +1,14 @@
 # Dict-Derive
 
-Derive macro for PyO3's `FromPyObject` and `IntoPyObject` traits. The derived implementation turns a Python's dict into your Rust struct and back.
+Derive macro for PyO3's `FromPyObject` and `IntoPy<PyObject>` traits. The derived implementation turns a Python's dict into your Rust struct and back.
 
 ## Usage
 
 Add the library to your `Cargo.toml` together with PyO3:
 ```
 [dependencies]
-pyo3 = "0.7.0"
-dict_derive = "0.1.2"
+pyo3 = "0.8.0"
+dict_derive = "0.2.0"
 ```
 
 Import the derive implementation and use it on your structs:
@@ -57,3 +57,7 @@ And then call your functions using normal python dicts:
 >>> mylib.get_default_user()
 {'name': 'Default', 'email': 'default@user.com', 'age': 27}
 ```
+
+
+### Older PyO3 versions
+For PyO3 version 0.7.0 or lower, use version 0.1 of this crate.
