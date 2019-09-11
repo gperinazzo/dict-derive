@@ -8,7 +8,7 @@ Add the library to your `Cargo.toml` together with PyO3:
 ```
 [dependencies]
 pyo3 = "0.7.0"
-dict_derive = "0.1.1"
+dict_derive = "0.1.2"
 ```
 
 Import the derive implementation and use it on your structs:
@@ -34,7 +34,7 @@ use pyo3::wrap_pyfunction;
 
 // Requires FromPyObject to receive a struct as an argument
 #[pyfunction]
-fn get_contact_info(user: User) -> PyResult<String> { 
+fn get_contact_info(user: User) -> PyResult<String> {
     Ok(format!("{} - {}", user.name, user.email))
 }
 
