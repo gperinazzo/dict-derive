@@ -1,13 +1,10 @@
 error[E0277]: the trait bound `Test: pyo3::conversion::FromPyObject<'_>` is not satisfied
  --> $DIR/unsupported_from.rs:9:11
   |
+7 | #[derive(FromPyObject)]
+  |          ------------ required by `<Derived as pyo3::conversion::FromPyObject<'source>>::extract::extract_required`
+8 | struct Derived {
 9 |     test: Test,
   |           ^^^^ the trait `pyo3::conversion::FromPyObject<'_>` is not implemented for `Test`
-  |
-note: required by `<Derived as pyo3::conversion::FromPyObject<'source>>::extract::extract_required`
- --> $DIR/unsupported_from.rs:7:10
-  |
-7 | #[derive(FromPyObject)]
-  |          ^^^^^^^^^^^^
 
 For more information about this error, try `rustc --explain E0277`.
