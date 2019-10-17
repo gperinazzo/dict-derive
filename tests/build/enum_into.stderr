@@ -3,3 +3,5 @@ error: Deriving enums is not supported
   |
 4 | pub enum Nothing {
   |     ^^^^
+
+error: could not compile `dict_derive-tests`.
