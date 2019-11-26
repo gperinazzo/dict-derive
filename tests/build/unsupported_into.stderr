@@ -12,6 +12,3 @@ error[E0277]: the trait bound `pyo3::object::PyObject: pyo3::conversion::FromPy<
           and 4 others
   = note: required because of the requirements on the impl of `pyo3::conversion::IntoPy<pyo3::object::PyObject>` for `Test`
   = note: required by `pyo3::conversion::IntoPy::into_py`
-
-For more information about this error, try `rustc --explain E0277`.
-error: could not compile `dict_derive-tests`.
