@@ -7,7 +7,7 @@ Derive macro for PyO3's `FromPyObject` and `IntoPy<PyObject>` traits. The derive
 Add the library to your `Cargo.toml` together with PyO3:
 ```
 [dependencies]
-pyo3 = "0.8.0"
+pyo3 = "0.9"
 dict_derive = "0.2.0"
 ```
 
