@@ -1,17 +1,17 @@
-error[E0277]: the trait bound `pyo3::object::PyObject: pyo3::conversion::FromPy<Test>` is not satisfied
+error[E0277]: the trait bound `pyo3::PyObject: pyo3::FromPy<Test>` is not satisfied
  --> $DIR/unsupported_into.rs:9:11
   |
 9 |     test: Test,
-  |           ^^^^ the trait `pyo3::conversion::FromPy<Test>` is not implemented for `pyo3::object::PyObject`
+  |           ^^^^ the trait `pyo3::FromPy<Test>` is not implemented for `pyo3::PyObject`
   |
   = help: the following implementations were found:
-            <pyo3::object::PyObject as pyo3::conversion::FromPy<&'a T>>
-            <pyo3::object::PyObject as pyo3::conversion::FromPy<&'a [u8]>>
-            <pyo3::object::PyObject as pyo3::conversion::FromPy<()>>
-            <pyo3::object::PyObject as pyo3::conversion::FromPy<bool>>
+            <pyo3::PyObject as pyo3::FromPy<&'a T>>
+            <pyo3::PyObject as pyo3::FromPy<&'a [u8]>>
+            <pyo3::PyObject as pyo3::FromPy<()>>
+            <pyo3::PyObject as pyo3::FromPy<bool>>
           and 6 others
-  = note: required because of the requirements on the impl of `pyo3::conversion::IntoPy<pyo3::object::PyObject>` for `Test`
-  = note: required by `pyo3::conversion::IntoPy::into_py`
+  = note: required because of the requirements on the impl of `pyo3::IntoPy<pyo3::PyObject>` for `Test`
+  = note: required by `pyo3::IntoPy::into_py`
 
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `dict_derive-tests`.

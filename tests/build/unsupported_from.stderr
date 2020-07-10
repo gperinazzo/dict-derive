@@ -1,28 +1,24 @@
-error[E0277]: the trait bound `Test: pyo3::pyclass::PyClass` is not satisfied
+error[E0277]: the trait bound `Test: pyo3::PyClass` is not satisfied
  --> $DIR/unsupported_from.rs:9:11
   |
 7 | #[derive(FromPyObject)]
-  |          ------------
-  |          |
-  |          required by this bound in `<Derived as pyo3::conversion::FromPyObject<'source>>::extract::extract_required`
+  |          ------------ required by this bound in `<Derived as pyo3::FromPyObject<'source>>::extract::extract_required`
 8 | struct Derived {
 9 |     test: Test,
-  |           ^^^^ the trait `pyo3::pyclass::PyClass` is not implemented for `Test`
+  |           ^^^^ the trait `pyo3::PyClass` is not implemented for `Test`
   |
-  = note: required because of the requirements on the impl of `pyo3::conversion::FromPyObject<'_>` for `Test`
+  = note: required because of the requirements on the impl of `pyo3::FromPyObject<'_>` for `Test`
 
 error[E0277]: the trait bound `Test: std::clone::Clone` is not satisfied
  --> $DIR/unsupported_from.rs:9:11
   |
 7 | #[derive(FromPyObject)]
-  |          ------------
-  |          |
-  |          required by this bound in `<Derived as pyo3::conversion::FromPyObject<'source>>::extract::extract_required`
+  |          ------------ required by this bound in `<Derived as pyo3::FromPyObject<'source>>::extract::extract_required`
 8 | struct Derived {
 9 |     test: Test,
   |           ^^^^ the trait `std::clone::Clone` is not implemented for `Test`
   |
-  = note: required because of the requirements on the impl of `pyo3::conversion::FromPyObject<'_>` for `Test`
+  = note: required because of the requirements on the impl of `pyo3::FromPyObject<'_>` for `Test`
 
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `dict_derive-tests`.

@@ -11,6 +11,13 @@ struct User {
     age: u16,
 }
 
+#[derive(FromPyObject, Debug)]
+struct UserWithLifetime<'a> {
+    name: Option<&'a str>,
+    email: &'a str,
+    age: u16,
+}
+
 fn make_user_dict<'a, A, B, C>(
     py: &'a Python,
     email: A,
@@ -32,6 +39,7 @@ where
     dict.set_item("age", age)?;
     Ok(dict)
 }
+
 
 #[test]
 fn test_conversion() -> PyResult<()> {
@@ -74,6 +82,18 @@ fn test_conversion() -> PyResult<()> {
 
         assert_eq!(user.name, None);
         assert_eq!(&user.email, "tester@tests.com");
+        assert_eq!(user.age, 27);
+    }
+    {
+        let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Tester")))?;
+
+        let result: PyResult<UserWithLifetime> = dict.extract();
+
+        assert!(result.is_ok());
+        let user = result.unwrap();
+
+        assert_eq!(user.name, Some("Tester"));
+        assert_eq!(user.email, "tester@tests.com");
         assert_eq!(user.age, 27);
     }
     Ok(())

@@ -1,6 +1,10 @@
 use quote::{quote, quote_spanned};
-use syn::export::TokenStream2;
-use syn::spanned::Spanned;
+use syn::{
+    export::TokenStream2,
+    spanned::Spanned,
+    parse_quote,
+};
+use quote::ToTokens;
 
 use syn::{Data, DeriveInput, Field, Ident};
 
@@ -80,13 +84,29 @@ pub fn from_impl(ast: DeriveInput) -> TokenStream2 {
     let extractions = struct_data.fields.into_iter().map(map_extraction);
 
     let name = ast.ident;
+    let mut impl_generics = ast.generics.clone();
+
+    let lifetimes_count = impl_generics.lifetimes().count();
+
+    if lifetimes_count > 1 {
+        return syn::Error::new(impl_generics.span(), "Deriving structs with more than one lifetime is not supported")
+            .to_compile_error();
+    } else if lifetimes_count == 0 {
+        impl_generics.params.push(parse_quote!('source));
+    };
+
+    let lifetime = impl_generics.lifetimes().next()
+        .map(|lt| (lt.lifetime.to_token_stream()))
+        .unwrap();
+
     let (_, ty_generics, where_clause) = ast.generics.split_for_impl();
+    let (impl_generics, _, _) = impl_generics.split_for_impl();
 
     let functions = extraction_functions();
 
     quote! {
-        impl<'source> ::pyo3::FromPyObject<'source> for #name #ty_generics #where_clause {
-            fn extract(obj: &'source ::pyo3::types::PyAny) -> ::pyo3::PyResult<Self> {
+        impl#impl_generics ::pyo3::FromPyObject<#lifetime> for #name #ty_generics #where_clause {
+            fn extract(obj: &#lifetime ::pyo3::types::PyAny) -> ::pyo3::PyResult<Self> {
                 use ::pyo3::{FromPyObject, PyErr, PyResult};
                 use ::pyo3::exceptions::{ValueError, TypeError};
                 use ::pyo3::types::PyDict;
@@ -103,6 +123,5 @@ pub fn from_impl(ast: DeriveInput) -> TokenStream2 {
 
             }
         }
-
     }
 }

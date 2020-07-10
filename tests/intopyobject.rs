@@ -10,6 +10,14 @@ struct User {
     age: u16,
 }
 
+#[derive(IntoPyObject, Debug)]
+struct UserWithLifetime<'a> {
+    name: Option<&'a str>,
+    email: &'a str,
+    age: u16,
+}
+
+
 #[test]
 fn test_conversion() -> PyResult<()> {
     let gil = Python::acquire_gil();
@@ -51,6 +59,24 @@ fn test_conversion() -> PyResult<()> {
 
         let name: Option<&str> = dict.get_item("name").unwrap().extract()?;
         assert_eq!(name, Some("Test"));
+    }
+    {
+        let user = UserWithLifetime {
+            name: Some("Test"),
+            email: "tester@tests.com",
+            age: 27,
+        };
+        let obj: PyObject = user.into_py(py);
+        let dict: &PyDict = obj.cast_as(py)?;
+
+        assert!(dict.get_item("name").is_some());
+        assert!(dict.get_item("email").is_some());
+
+        let name: Option<&str> = dict.get_item("name").unwrap().extract()?;
+        assert_eq!(name, Some("Test"));
+
+        let email: &str = dict.get_item("email").unwrap().extract()?;
+        assert_eq!(email, "tester@tests.com");
     }
     Ok(())
 }
