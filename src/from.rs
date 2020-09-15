@@ -45,7 +45,7 @@ fn map_extraction(field: Field) -> TokenStream2 {
 fn extraction_functions() -> syn::export::TokenStream2 {
     quote! {
         fn map_exception(name: &str, _: PyErr) -> PyErr {
-            PyErr::new::<TypeError, _>(format!("Unable to convert key: {}", name))
+            PyErr::new::<PyTypeError, _>(format!("Unable to convert key: {}", name))
         }
 
         fn extract_required<'a, T>(dict: &'a PyDict, name: &str) -> PyResult<T>
@@ -53,7 +53,7 @@ fn extraction_functions() -> syn::export::TokenStream2 {
             match dict.get_item(name) {
                 Some(v) => FromPyObject::extract(&v)
                     .map_err(|err| map_exception(name, err)),
-                None => Err(PyErr::new::<ValueError, _>(format!("Missing required key: {}", name)))
+                None => Err(PyErr::new::<PyValueError, _>(format!("Missing required key: {}", name)))
             }
         }
 
@@ -108,11 +108,11 @@ pub fn from_impl(ast: DeriveInput) -> TokenStream2 {
         impl#impl_generics ::pyo3::FromPyObject<#lifetime> for #name #ty_generics #where_clause {
             fn extract(obj: &#lifetime ::pyo3::types::PyAny) -> ::pyo3::PyResult<Self> {
                 use ::pyo3::{FromPyObject, PyErr, PyResult};
-                use ::pyo3::exceptions::{ValueError, TypeError};
+                use ::pyo3::exceptions::{PyValueError, PyTypeError};
                 use ::pyo3::types::PyDict;
                 let dict = <pyo3::types::PyDict as ::pyo3::PyTryFrom>::try_from(obj)
                     .map_err(
-                        |_| PyErr::new::<TypeError, _>("Invalid type to convert, expected dict")
+                        |_| PyErr::new::<PyTypeError, _>("Invalid type to convert, expected dict")
                     )?;
 
                 #functions
