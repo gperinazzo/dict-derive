@@ -3,5 +3,3 @@ error: Deriving structs with more than one lifetime is not supported
   |
 4 | struct Derived<'a, 'b> {
   |               ^^^^^^^^
-
-error: could not compile `dict_derive-tests`.
