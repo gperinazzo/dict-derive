@@ -2,7 +2,6 @@ extern crate pyo3;
 use dict_derive::FromPyObject;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
-use pyo3::PyErrValue;
 
 #[derive(FromPyObject, Debug)]
 struct User {
@@ -109,15 +108,10 @@ fn test_type_error() -> PyResult<()> {
     assert!(result.is_err());
     let err = result.unwrap_err();
 
-    assert!(err.is_instance::<pyo3::exceptions::TypeError>(py));
+    assert!(err.is_instance::<pyo3::exceptions::PyTypeError>(py));
 
-    if let PyErrValue::ToObject(obj) = err.pvalue {
-        let value: PyObject = (*obj).to_object(py);
-        let result: String = value.extract(py)?;
-        assert_eq!(&result, "Unable to convert key: age");
-    } else {
-        panic!("Not To Object");
-    }
+    let result = err.pvalue(py).to_string();
+    assert_eq!(&result, "TypeError: Unable to convert key: age");
 
     Ok(())
 }
@@ -133,15 +127,11 @@ fn test_missing_key() -> PyResult<()> {
     assert!(result.is_err());
     let err = result.unwrap_err();
 
-    assert!(err.is_instance::<pyo3::exceptions::ValueError>(py));
+    assert!(err.is_instance::<pyo3::exceptions::PyValueError>(py));
 
-    if let PyErrValue::ToObject(obj) = err.pvalue {
-        let value: PyObject = (*obj).to_object(py);
-        let result: String = value.extract(py)?;
-        assert_eq!(&result, "Missing required key: age");
-    } else {
-        panic!("Not To Object");
-    }
+    let result = err.pvalue(py).to_string();
+    assert_eq!(&result, "ValueError: Missing required key: age");
+
     Ok(())
 }
 
@@ -155,15 +145,11 @@ fn test_wrong_type() -> PyResult<()> {
     assert!(result.is_err());
     let err = result.unwrap_err();
 
-    assert!(err.is_instance::<pyo3::exceptions::TypeError>(py));
+    assert!(err.is_instance::<pyo3::exceptions::PyTypeError>(py));
 
-    if let PyErrValue::ToObject(obj) = err.pvalue {
-        let value: PyObject = (*obj).to_object(py);
-        let result: String = value.extract(py)?;
-        assert_eq!(&result, "Invalid type to convert, expected dict");
-    } else {
-        panic!("Not To Object");
-    }
+    let result = err.pvalue(py).to_string();
+    assert_eq!(&result, "TypeError: Invalid type to convert, expected dict");
+
     Ok(())
 }
 
