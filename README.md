@@ -60,4 +60,5 @@ And then call your functions using normal python dicts:
 
 
 ### Older PyO3 versions
-For PyO3 version 0.7.0 or lower, use version 0.1 of this crate.
+- For PyO3 version 0.7.0 or lower, use version 0.1 of this crate.
+- For PyO3 version 0.8 to 0.10, use version 0.2 of this crate.
