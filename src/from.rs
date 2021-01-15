@@ -1,12 +1,10 @@
-use quote::{quote, quote_spanned};
+use proc_macro2::TokenStream;
+use quote::{ToTokens, quote, quote_spanned};
 use syn::{
-    export::TokenStream2,
     spanned::Spanned,
     parse_quote,
+    Data, DeriveInput, Field, Ident,
 };
-use quote::ToTokens;
-
-use syn::{Data, DeriveInput, Field, Ident};
 
 fn is_option(ty: &syn::Type) -> bool {
     let path = match *ty {
@@ -20,7 +18,7 @@ fn is_option(ty: &syn::Type) -> bool {
         .any(|x| x.as_str() == "Option")
 }
 
-fn map_extraction(field: Field) -> TokenStream2 {
+fn map_extraction(field: Field) -> TokenStream {
     let ident = match &field.ident {
         Some(i) => i,
         None => {
@@ -42,7 +40,7 @@ fn map_extraction(field: Field) -> TokenStream2 {
     }
 }
 
-fn extraction_functions() -> syn::export::TokenStream2 {
+fn extraction_functions() -> TokenStream {
     quote! {
         fn map_exception(name: &str, _: PyErr) -> PyErr {
             PyErr::new::<PyTypeError, _>(format!("Unable to convert key: {}", name))
@@ -68,7 +66,7 @@ fn extraction_functions() -> syn::export::TokenStream2 {
     }
 }
 
-pub fn from_impl(ast: DeriveInput) -> TokenStream2 {
+pub fn from_impl(ast: DeriveInput) -> TokenStream {
     let struct_data = match ast.data {
         Data::Struct(s) => s,
         Data::Enum(e) => {
