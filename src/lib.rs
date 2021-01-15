@@ -1,5 +1,5 @@
-extern crate proc_macro;
-extern crate syn;
+// extern crate proc_macro;
+// extern crate syn;
 
 mod from;
 mod into;
