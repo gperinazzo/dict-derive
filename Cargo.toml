@@ -5,7 +5,7 @@ repository = "https://github.com/gperinazzo/dict-derive"
 readme = "README.md"
 keywords = ["pyo3", "derive", "dict"]
 license = "Apache-2.0"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Guilherme Perinazzo <gperinazzo@gmail.com>"]
 edition = "2018"
 
