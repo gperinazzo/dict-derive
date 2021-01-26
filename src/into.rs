@@ -1,8 +1,6 @@
 use proc_macro2::TokenStream;
 use quote::{quote, quote_spanned};
-use syn::spanned::Spanned;
-
-use syn::{Data, DeriveInput, Field};
+use syn::{Data, DeriveInput, Field, spanned::Spanned};
 
 fn map_fields(field: Field) -> TokenStream {
     let ident = match &field.ident {
