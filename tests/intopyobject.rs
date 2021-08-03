@@ -17,9 +17,9 @@ struct UserWithLifetime<'a> {
     age: u16,
 }
 
-
 #[test]
 fn test_conversion() -> PyResult<()> {
+    pyo3::prepare_freethreaded_python();
     let gil = Python::acquire_gil();
     let py = gil.python();
 

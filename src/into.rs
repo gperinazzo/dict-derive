@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream;
 use quote::{quote, quote_spanned};
-use syn::{Data, DeriveInput, Field, spanned::Spanned};
+use syn::{spanned::Spanned, Data, DeriveInput, Field};
 
 fn map_fields(field: Field) -> TokenStream {
     let ident = match &field.ident {
@@ -40,8 +40,7 @@ pub fn into_impl(ast: DeriveInput) -> TokenStream {
     quote! {
         impl #impl_generics ::pyo3::IntoPy<::pyo3::PyObject> for #name #ty_generics #where_clause {
             fn into_py(self, py: ::pyo3::Python) -> ::pyo3::PyObject {
-                use ::pyo3::{IntoPy, PyObject, PyErr, PyResult};
-                use ::pyo3::exceptions::{ValueError, TypeError};
+                use ::pyo3::{IntoPy, PyObject, PyErr};
                 use ::pyo3::types::PyDict;
                 let dict = PyDict::new(py);
                 #(#field_setters);*

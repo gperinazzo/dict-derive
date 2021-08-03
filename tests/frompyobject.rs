@@ -39,9 +39,9 @@ where
     Ok(dict)
 }
 
-
 #[test]
 fn test_conversion() -> PyResult<()> {
+    pyo3::prepare_freethreaded_python();
     let gil = Python::acquire_gil();
     let py = gil.python();
     {
@@ -100,6 +100,7 @@ fn test_conversion() -> PyResult<()> {
 
 #[test]
 fn test_type_error() -> PyResult<()> {
+    pyo3::prepare_freethreaded_python();
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = make_user_dict(&py, "tester@tests.com", "27", Some(Some("Test")))?;
@@ -111,13 +112,14 @@ fn test_type_error() -> PyResult<()> {
     assert!(err.is_instance::<pyo3::exceptions::PyTypeError>(py));
 
     let result = err.pvalue(py).to_string();
-    assert_eq!(&result, "TypeError: Unable to convert key: age");
+    assert_eq!(&result, "Unable to convert key: age");
 
     Ok(())
 }
 
 #[test]
 fn test_missing_key() -> PyResult<()> {
+    pyo3::prepare_freethreaded_python();
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Test")))?;
@@ -130,13 +132,14 @@ fn test_missing_key() -> PyResult<()> {
     assert!(err.is_instance::<pyo3::exceptions::PyValueError>(py));
 
     let result = err.pvalue(py).to_string();
-    assert_eq!(&result, "ValueError: Missing required key: age");
+    assert_eq!(&result, "Missing required key: age");
 
     Ok(())
 }
 
 #[test]
 fn test_wrong_type() -> PyResult<()> {
+    pyo3::prepare_freethreaded_python();
     let gil = Python::acquire_gil();
     let py = gil.python();
     let list = PyList::new(py, vec![1, 2, 3]);
@@ -148,7 +151,7 @@ fn test_wrong_type() -> PyResult<()> {
     assert!(err.is_instance::<pyo3::exceptions::PyTypeError>(py));
 
     let result = err.pvalue(py).to_string();
-    assert_eq!(&result, "TypeError: Invalid type to convert, expected dict");
+    assert_eq!(&result, "Invalid type to convert, expected dict");
 
     Ok(())
 }
@@ -165,6 +168,7 @@ struct TotallyOptionalUser {
 
 #[test]
 fn test_optionals() -> PyResult<()> {
+    pyo3::prepare_freethreaded_python();
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);

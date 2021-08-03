@@ -1,7 +1,11 @@
 error[E0277]: the trait bound `Test: IntoPy<Py<PyAny>>` is not satisfied
- --> $DIR/unsupported_into.rs:9:5
-  |
-9 |     test: Test,
-  |     ^^^^^^^^^^ the trait `IntoPy<Py<PyAny>>` is not implemented for `Test`
-  |
-  = note: required by `into_py`
+   --> $DIR/unsupported_into.rs:9:5
+    |
+9   |     test: Test,
+    |     ^^^^^^^^^^ the trait `IntoPy<Py<PyAny>>` is not implemented for `Test`
+    |
+note: required by `into_py`
+   --> $DIR/conversion.rs:209:5
+    |
+209 |     fn into_py(self, py: Python) -> T;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
