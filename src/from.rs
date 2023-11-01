@@ -48,7 +48,7 @@ fn extraction_functions() -> TokenStream {
 
         fn extract_required<'a, T>(dict: &'a PyDict, name: &str) -> PyResult<T>
         where T: FromPyObject<'a>{
-            match dict.get_item(name) {
+            match dict.get_item(name)? {
                 Some(v) => FromPyObject::extract(&v)
                     .map_err(|err| map_exception(name, err)),
                 None => Err(PyErr::new::<PyValueError, _>(format!("Missing required key: {}", name)))
@@ -57,7 +57,7 @@ fn extraction_functions() -> TokenStream {
 
         fn extract_optional<'a, T>(dict: &'a PyDict, name: &str) -> PyResult<std::option::Option<T>>
         where T: FromPyObject<'a>{
-            match dict.get_item(name) {
+            match dict.get_item(name)? {
                 Some(v) => FromPyObject::extract(&v)
                     .map_err(|err| map_exception(name, err)),
                 None => Ok(None),
