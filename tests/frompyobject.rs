@@ -42,118 +42,117 @@ where
 #[test]
 fn test_conversion() -> PyResult<()> {
     pyo3::prepare_freethreaded_python();
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    {
-        let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Tester")))?;
+    Python::with_gil(|py| {
+        {
+            let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Tester")))?;
 
-        let result: PyResult<User> = dict.extract();
+            let result: PyResult<User> = dict.extract();
 
-        assert!(result.is_ok());
-        let user = result.unwrap();
+            assert!(result.is_ok());
+            let user = result.unwrap();
 
-        assert_eq!(&user.name.unwrap(), "Tester");
-        assert_eq!(&user.email, "tester@tests.com");
-        assert_eq!(user.age, 27);
-    }
+            assert_eq!(&user.name.unwrap(), "Tester");
+            assert_eq!(&user.email, "tester@tests.com");
+            assert_eq!(user.age, 27);
+        }
 
-    {
-        let name: Option<Option<&str>> = None;
-        let dict = make_user_dict(&py, "tester@tests.com", 27, name)?;
+        {
+            let name: Option<Option<&str>> = None;
+            let dict = make_user_dict(&py, "tester@tests.com", 27, name)?;
 
-        let result: PyResult<User> = dict.extract();
+            let result: PyResult<User> = dict.extract();
 
-        assert!(result.is_ok());
-        let user = result.unwrap();
+            assert!(result.is_ok());
+            let user = result.unwrap();
 
-        assert_eq!(user.name, None);
-        assert_eq!(&user.email, "tester@tests.com");
-        assert_eq!(user.age, 27);
-    }
-    {
-        let name: Option<Option<&str>> = Some(None);
-        let dict = make_user_dict(&py, "tester@tests.com", 27, name)?;
+            assert_eq!(user.name, None);
+            assert_eq!(&user.email, "tester@tests.com");
+            assert_eq!(user.age, 27);
+        }
+        {
+            let name: Option<Option<&str>> = Some(None);
+            let dict = make_user_dict(&py, "tester@tests.com", 27, name)?;
 
-        let result: PyResult<User> = dict.extract();
+            let result: PyResult<User> = dict.extract();
 
-        assert!(result.is_ok());
-        let user = result.unwrap();
+            assert!(result.is_ok());
+            let user = result.unwrap();
 
-        assert_eq!(user.name, None);
-        assert_eq!(&user.email, "tester@tests.com");
-        assert_eq!(user.age, 27);
-    }
-    {
-        let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Tester")))?;
+            assert_eq!(user.name, None);
+            assert_eq!(&user.email, "tester@tests.com");
+            assert_eq!(user.age, 27);
+        }
+        {
+            let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Tester")))?;
 
-        let result: PyResult<UserWithLifetime> = dict.extract();
+            let result: PyResult<UserWithLifetime> = dict.extract();
 
-        assert!(result.is_ok());
-        let user = result.unwrap();
+            assert!(result.is_ok());
+            let user = result.unwrap();
 
-        assert_eq!(user.name, Some("Tester"));
-        assert_eq!(user.email, "tester@tests.com");
-        assert_eq!(user.age, 27);
-    }
-    Ok(())
+            assert_eq!(user.name, Some("Tester"));
+            assert_eq!(user.email, "tester@tests.com");
+            assert_eq!(user.age, 27);
+        }
+        Ok(())
+    })
 }
 
 #[test]
 fn test_type_error() -> PyResult<()> {
     pyo3::prepare_freethreaded_python();
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    let dict = make_user_dict(&py, "tester@tests.com", "27", Some(Some("Test")))?;
+    Python::with_gil(|py| {
+        let dict = make_user_dict(&py, "tester@tests.com", "27", Some(Some("Test")))?;
 
-    let result: PyResult<User> = dict.extract();
-    assert!(result.is_err());
-    let err = result.unwrap_err();
+        let result: PyResult<User> = dict.extract();
+        assert!(result.is_err());
+        let err = result.unwrap_err();
 
-    assert!(err.is_instance::<pyo3::exceptions::PyTypeError>(py));
+        assert!(err.is_instance_of::<pyo3::exceptions::PyTypeError>(py));
 
-    let result = err.pvalue(py).to_string();
-    assert_eq!(&result, "Unable to convert key: age");
-
-    Ok(())
+        let result = err.value(py).to_string();
+        assert_eq!(&result, "Unable to convert key: age");
+        Ok(())
+    })
 }
 
 #[test]
 fn test_missing_key() -> PyResult<()> {
     pyo3::prepare_freethreaded_python();
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Test")))?;
-    dict.del_item("age")?;
+    Python::with_gil(|py| {
+        let dict = make_user_dict(&py, "tester@tests.com", 27, Some(Some("Test")))?;
+        dict.del_item("age")?;
 
-    let result: PyResult<User> = dict.extract();
-    assert!(result.is_err());
-    let err = result.unwrap_err();
+        let result: PyResult<User> = dict.extract();
+        assert!(result.is_err());
+        let err = result.unwrap_err();
 
-    assert!(err.is_instance::<pyo3::exceptions::PyValueError>(py));
+        assert!(err.is_instance_of::<pyo3::exceptions::PyValueError>(py));
 
-    let result = err.pvalue(py).to_string();
-    assert_eq!(&result, "Missing required key: age");
+        let result = err.value(py).to_string();
+        assert_eq!(&result, "Missing required key: age");
 
-    Ok(())
+        Ok(())
+    })
 }
 
 #[test]
 fn test_wrong_type() -> PyResult<()> {
     pyo3::prepare_freethreaded_python();
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    let list = PyList::new(py, vec![1, 2, 3]);
+    Python::with_gil(|py| {
+        let list = PyList::new(py, vec![1, 2, 3]);
 
-    let result: PyResult<User> = list.extract();
-    assert!(result.is_err());
-    let err = result.unwrap_err();
+        let result: PyResult<User> = list.extract();
+        assert!(result.is_err());
+        let err = result.unwrap_err();
 
-    assert!(err.is_instance::<pyo3::exceptions::PyTypeError>(py));
+        assert!(err.is_instance_of::<pyo3::exceptions::PyTypeError>(py));
 
-    let result = err.pvalue(py).to_string();
-    assert_eq!(&result, "Invalid type to convert, expected dict");
+        let result = err.value(py).to_string();
+        assert_eq!(&result, "Invalid type to convert, expected dict");
 
-    Ok(())
+        Ok(())
+    })
 }
 
 use std::option;
@@ -169,18 +168,18 @@ struct TotallyOptionalUser {
 #[test]
 fn test_optionals() -> PyResult<()> {
     pyo3::prepare_freethreaded_python();
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    let dict = PyDict::new(py);
-    let result: PyResult<TotallyOptionalUser> = dict.extract();
+    Python::with_gil(|py| {
+        let dict = PyDict::new(py);
+        let result: PyResult<TotallyOptionalUser> = dict.extract();
 
-    assert!(result.is_ok());
-    let user = result.unwrap();
+        assert!(result.is_ok());
+        let user = result.unwrap();
 
-    assert_eq!(user.name, None);
-    assert_eq!(user.email, None);
-    assert_eq!(user.age, None);
-    assert_eq!(user.address, None);
+        assert_eq!(user.name, None);
+        assert_eq!(user.email, None);
+        assert_eq!(user.age, None);
+        assert_eq!(user.address, None);
 
-    Ok(())
+        Ok(())
+    })
 }

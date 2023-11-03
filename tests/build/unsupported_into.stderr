@@ -1,11 +1,19 @@
 error[E0277]: the trait bound `Test: IntoPy<Py<PyAny>>` is not satisfied
-   --> $DIR/unsupported_into.rs:9:5
-    |
-9   |     test: Test,
-    |     ^^^^^^^^^^ the trait `IntoPy<Py<PyAny>>` is not implemented for `Test`
-    |
-note: required by `into_py`
-   --> $DIR/conversion.rs:209:5
-    |
-209 |     fn into_py(self, py: Python) -> T;
-    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ --> tests/build/unsupported_into.rs:9:5
+  |
+9 |     test: Test,
+  |     ^^^^^^----
+  |     |     |
+  |     |     required by a bound introduced by this call
+  |     the trait `IntoPy<Py<PyAny>>` is not implemented for `Test`
+  |
+  = help: the following other types implement trait `IntoPy<T>`:
+            <bool as IntoPy<Py<PyAny>>>
+            <char as IntoPy<Py<PyAny>>>
+            <isize as IntoPy<Py<PyAny>>>
+            <i8 as IntoPy<Py<PyAny>>>
+            <i16 as IntoPy<Py<PyAny>>>
+            <i32 as IntoPy<Py<PyAny>>>
+            <i64 as IntoPy<Py<PyAny>>>
+            <i128 as IntoPy<Py<PyAny>>>
+          and $N others

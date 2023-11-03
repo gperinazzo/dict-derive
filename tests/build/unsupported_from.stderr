@@ -1,21 +1,52 @@
 error[E0277]: the trait bound `Test: PyClass` is not satisfied
- --> $DIR/unsupported_from.rs:9:11
+ --> tests/build/unsupported_from.rs:9:11
   |
-7 | #[derive(FromPyObject)]
-  |          ------------ required by this bound in `extract_required`
-8 | struct Derived {
 9 |     test: Test,
   |           ^^^^ the trait `PyClass` is not implemented for `Test`
   |
-  = note: required because of the requirements on the impl of `FromPyObject<'_>` for `Test`
-
-error[E0277]: the trait bound `Test: Clone` is not satisfied
- --> $DIR/unsupported_from.rs:9:11
+  = help: the following other types implement trait `FromPyObject<'source>`:
+            <bool as FromPyObject<'source>>
+            <char as FromPyObject<'_>>
+            <isize as FromPyObject<'source>>
+            <i8 as FromPyObject<'source>>
+            <i16 as FromPyObject<'source>>
+            <i32 as FromPyObject<'source>>
+            <i64 as FromPyObject<'source>>
+            <i128 as FromPyObject<'source>>
+          and $N others
+  = note: required for `Test` to implement `FromPyObject<'_>`
+note: required by a bound in `extract_required`
+ --> tests/build/unsupported_from.rs:7:10
   |
 7 | #[derive(FromPyObject)]
-  |          ------------ required by this bound in `extract_required`
-8 | struct Derived {
+  |          ^^^^^^^^^^^^ required by this bound in `extract_required`
+  = note: this error originates in the derive macro `FromPyObject` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `Test: Clone` is not satisfied
+ --> tests/build/unsupported_from.rs:9:11
+  |
 9 |     test: Test,
   |           ^^^^ the trait `Clone` is not implemented for `Test`
   |
-  = note: required because of the requirements on the impl of `FromPyObject<'_>` for `Test`
+  = help: the following other types implement trait `FromPyObject<'source>`:
+            <bool as FromPyObject<'source>>
+            <char as FromPyObject<'_>>
+            <isize as FromPyObject<'source>>
+            <i8 as FromPyObject<'source>>
+            <i16 as FromPyObject<'source>>
+            <i32 as FromPyObject<'source>>
+            <i64 as FromPyObject<'source>>
+            <i128 as FromPyObject<'source>>
+          and $N others
+  = note: required for `Test` to implement `FromPyObject<'_>`
+note: required by a bound in `extract_required`
+ --> tests/build/unsupported_from.rs:7:10
+  |
+7 | #[derive(FromPyObject)]
+  |          ^^^^^^^^^^^^ required by this bound in `extract_required`
+  = note: this error originates in the derive macro `FromPyObject` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider annotating `Test` with `#[derive(Clone)]`
+  |
+3 + #[derive(Clone)]
+4 | struct Test {
+  |
