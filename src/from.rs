@@ -42,8 +42,8 @@ fn map_extraction(field: Field) -> TokenStream {
 
 fn extraction_functions() -> TokenStream {
     quote! {
-        fn map_exception(name: &str, _: PyErr) -> PyErr {
-            PyErr::new::<PyTypeError, _>(format!("Unable to convert key: {}", name))
+        fn map_exception(name: &str, e: PyErr) -> PyErr {
+            PyErr::new::<PyTypeError, _>(format!("Unable to convert key: {}. Error: {}", name, e))
         }
 
         fn extract_required<'a, T>(dict: &'a PyDict, name: &str) -> PyResult<T>

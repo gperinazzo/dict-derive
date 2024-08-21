@@ -1,18 +1,18 @@
-error[E0277]: the trait bound `Test: PyClass` is not satisfied
- --> tests/build/unsupported_from.rs:9:11
+error[E0277]: the trait bound `Test: FromPyObject<'_>` is not satisfied
+ --> tests/build/unsupported_from.rs:9:5
   |
 9 |     test: Test,
-  |           ^^^^ the trait `PyClass` is not implemented for `Test`
+  |     ^^^^^^^^^^ the trait `PyClass` is not implemented for `Test`, which is required by `Test: FromPyObject<'_>`
   |
   = help: the following other types implement trait `FromPyObject<'source>`:
-            <bool as FromPyObject<'source>>
-            <char as FromPyObject<'_>>
-            <isize as FromPyObject<'source>>
-            <i8 as FromPyObject<'source>>
-            <i16 as FromPyObject<'source>>
-            <i32 as FromPyObject<'source>>
-            <i64 as FromPyObject<'source>>
-            <i128 as FromPyObject<'source>>
+            <&'a PyCell<T> as FromPyObject<'a>>
+            <&'a [u8] as FromPyObject<'a>>
+            <&'py CancelledError as FromPyObject<'py>>
+            <&'py IncompleteReadError as FromPyObject<'py>>
+            <&'py InvalidStateError as FromPyObject<'py>>
+            <&'py LimitOverrunError as FromPyObject<'py>>
+            <&'py PanicException as FromPyObject<'py>>
+            <&'py PyAny as FromPyObject<'py>>
           and $N others
   = note: required for `Test` to implement `FromPyObject<'_>`
 note: required by a bound in `extract_required`
@@ -22,21 +22,21 @@ note: required by a bound in `extract_required`
   |          ^^^^^^^^^^^^ required by this bound in `extract_required`
   = note: this error originates in the derive macro `FromPyObject` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error[E0277]: the trait bound `Test: Clone` is not satisfied
- --> tests/build/unsupported_from.rs:9:11
+error[E0277]: the trait bound `Test: FromPyObject<'_>` is not satisfied
+ --> tests/build/unsupported_from.rs:9:5
   |
 9 |     test: Test,
-  |           ^^^^ the trait `Clone` is not implemented for `Test`
+  |     ^^^^^^^^^^ the trait `Clone` is not implemented for `Test`, which is required by `Test: FromPyObject<'_>`
   |
   = help: the following other types implement trait `FromPyObject<'source>`:
-            <bool as FromPyObject<'source>>
-            <char as FromPyObject<'_>>
-            <isize as FromPyObject<'source>>
-            <i8 as FromPyObject<'source>>
-            <i16 as FromPyObject<'source>>
-            <i32 as FromPyObject<'source>>
-            <i64 as FromPyObject<'source>>
-            <i128 as FromPyObject<'source>>
+            <&'a PyCell<T> as FromPyObject<'a>>
+            <&'a [u8] as FromPyObject<'a>>
+            <&'py CancelledError as FromPyObject<'py>>
+            <&'py IncompleteReadError as FromPyObject<'py>>
+            <&'py InvalidStateError as FromPyObject<'py>>
+            <&'py LimitOverrunError as FromPyObject<'py>>
+            <&'py PanicException as FromPyObject<'py>>
+            <&'py PyAny as FromPyObject<'py>>
           and $N others
   = note: required for `Test` to implement `FromPyObject<'_>`
 note: required by a bound in `extract_required`

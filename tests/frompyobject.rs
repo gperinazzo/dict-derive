@@ -111,7 +111,7 @@ fn test_type_error() -> PyResult<()> {
         assert!(err.is_instance_of::<pyo3::exceptions::PyTypeError>(py));
 
         let result = err.value(py).to_string();
-        assert_eq!(&result, "Unable to convert key: age");
+        assert_eq!(&result, "Unable to convert key: age. Error: TypeError: 'str' object cannot be interpreted as an integer");
         Ok(())
     })
 }

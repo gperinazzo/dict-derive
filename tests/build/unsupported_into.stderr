@@ -8,12 +8,12 @@ error[E0277]: the trait bound `Test: IntoPy<Py<PyAny>>` is not satisfied
   |     the trait `IntoPy<Py<PyAny>>` is not implemented for `Test`
   |
   = help: the following other types implement trait `IntoPy<T>`:
-            <bool as IntoPy<Py<PyAny>>>
-            <char as IntoPy<Py<PyAny>>>
-            <isize as IntoPy<Py<PyAny>>>
-            <i8 as IntoPy<Py<PyAny>>>
-            <i16 as IntoPy<Py<PyAny>>>
-            <i32 as IntoPy<Py<PyAny>>>
-            <i64 as IntoPy<Py<PyAny>>>
-            <i128 as IntoPy<Py<PyAny>>>
+            <&'a OsString as IntoPy<Py<PyAny>>>
+            <&'a Path as IntoPy<Py<PyAny>>>
+            <&'a PathBuf as IntoPy<Py<PyAny>>>
+            <&'a PyErr as IntoPy<Py<PyAny>>>
+            <&'a String as IntoPy<Py<PyAny>>>
+            <&'a [u8] as IntoPy<Py<PyAny>>>
+            <&'a str as IntoPy<Py<PyAny>>>
+            <&'a str as IntoPy<Py<PyString>>>
           and $N others
