@@ -1,10 +1,6 @@
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote, quote_spanned};
-use syn::{
-    spanned::Spanned,
-    parse_quote,
-    Data, DeriveInput, Field, Ident,
-};
+use quote::{quote, quote_spanned, ToTokens};
+use syn::{parse_quote, spanned::Spanned, Data, DeriveInput, Field, Ident};
 
 fn is_option(ty: &syn::Type) -> bool {
     let path = match *ty {
@@ -46,19 +42,19 @@ fn extraction_functions() -> TokenStream {
             PyErr::new::<PyTypeError, _>(format!("Unable to convert key: {}. Error: {}", name, e))
         }
 
-        fn extract_required<'a, T>(dict: &'a PyDict, name: &str) -> PyResult<T>
+        fn extract_required<'a, T>(dict: &Bound<'a, PyDict>, name: &str) -> PyResult<T>
         where T: FromPyObject<'a>{
-            match dict.get_item(name)? {
-                Some(v) => FromPyObject::extract(&v)
+            match PyDictMethods::get_item(dict, name)? {
+                Some(v) => FromPyObject::extract_bound(&v)
                     .map_err(|err| map_exception(name, err)),
                 None => Err(PyErr::new::<PyValueError, _>(format!("Missing required key: {}", name)))
             }
         }
 
-        fn extract_optional<'a, T>(dict: &'a PyDict, name: &str) -> PyResult<std::option::Option<T>>
+        fn extract_optional<'a, T>(dict: &Bound<'a, PyDict>, name: &str) -> PyResult<std::option::Option<T>>
         where T: FromPyObject<'a>{
-            match dict.get_item(name)? {
-                Some(v) => FromPyObject::extract(&v)
+            match PyDictMethods::get_item(dict, name)? {
+                Some(v) => FromPyObject::extract_bound(&v)
                     .map_err(|err| map_exception(name, err)),
                 None => Ok(None),
             }
@@ -87,13 +83,18 @@ pub fn from_impl(ast: DeriveInput) -> TokenStream {
     let lifetimes_count = impl_generics.lifetimes().count();
 
     if lifetimes_count > 1 {
-        return syn::Error::new(impl_generics.span(), "Deriving structs with more than one lifetime is not supported")
-            .to_compile_error();
+        return syn::Error::new(
+            impl_generics.span(),
+            "Deriving structs with more than one lifetime is not supported",
+        )
+        .to_compile_error();
     } else if lifetimes_count == 0 {
         impl_generics.params.push(parse_quote!('source));
     };
 
-    let lifetime = impl_generics.lifetimes().next()
+    let lifetime = impl_generics
+        .lifetimes()
+        .next()
         .map(|lt| (lt.lifetime.to_token_stream()))
         .unwrap();
 
@@ -103,12 +104,13 @@ pub fn from_impl(ast: DeriveInput) -> TokenStream {
     let functions = extraction_functions();
 
     quote! {
-        impl#impl_generics ::pyo3::FromPyObject<#lifetime> for #name #ty_generics #where_clause {
-            fn extract(obj: &#lifetime ::pyo3::types::PyAny) -> ::pyo3::PyResult<Self> {
+        impl #impl_generics ::pyo3::FromPyObject<#lifetime> for #name #ty_generics #where_clause {
+            fn extract_bound(obj: &::pyo3::prelude::Bound<#lifetime, ::pyo3::types::PyAny>) -> ::pyo3::PyResult<Self> {
                 use ::pyo3::{FromPyObject, PyErr, PyResult};
                 use ::pyo3::exceptions::{PyValueError, PyTypeError};
-                use ::pyo3::types::PyDict;
-                let dict = <pyo3::types::PyDict as ::pyo3::PyTryFrom>::try_from(obj)
+                use ::pyo3::types::{PyDict, PyAnyMethods, PyDictMethods};
+                use ::pyo3::prelude::Bound;
+                let dict = obj.downcast::<PyDict>()
                     .map_err(
                         |_| PyErr::new::<PyTypeError, _>("Invalid type to convert, expected dict")
                     )?;

@@ -7,8 +7,8 @@ Derive macro for PyO3's `FromPyObject` and `IntoPy<PyObject>` traits. The derive
 Add the library to your `Cargo.toml` together with PyO3:
 ```
 [dependencies]
-pyo3 = "0.14.1"
-dict_derive = "0.4.0"
+pyo3 = { version = "0.22", features = ["gil-refs"] }
+dict_derive = "0.6"
 ```
 
 Import the derive implementation and use it on your structs:
@@ -64,3 +64,5 @@ And then call your functions using normal python dicts:
 - For PyO3 version 0.8 to 0.10, use version 0.2 of this crate.
 - For PyO3 version 0.11 to 0.13, use version 0.3 of this crate.
 - For PyO3 version 0.14 to 0.19, use version 0.4 of this crate.
+- For PyO3 version 0.20, use version 0.5 of this crate.
+
